@@ -1,13 +1,19 @@
-# In Work - منصة الخدمات الحرفية الذكية في الإسماعيلية
+# In Work AI
 
-أول منصة رقمية سيادية مجانية (0% تكلفة) لربط العملاء بالحرفيين المعتمدين في محافظة الإسماعيلية.
+Professional Services Platform
 
-## التقنيات المستخدمة
-- الواجهة الأمامية: Next.js + Tailwind CSS
-- قاعدة البيانات والأمان: Supabase
-- الخرائط والمدفوعات: Leaflet.js و Instapay ومحافظ الكاش المصرية.
+## Stack
+- Next.js 14
+- React
+- Supabase
+- Leaflet
+- OpenStreetMap
 
-## هيكل المشروع
-- /docs : وثائق المعمارية والاتفاقيات القانونية ورحلة المستخدم.
-- /src : مكونات الأكواد وصفحات الواجهة.
-- /scripts : سكريبتات التشغيل والأتمتة.
+## Features
+- Worker Marketplace
+- Live Location
+- Payments
+- AI Matching
+
+## Documentation
+See docs/
