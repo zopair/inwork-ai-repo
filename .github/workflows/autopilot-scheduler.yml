@@ -1,0 +1,23 @@
+name: In Work Sovereign Autopilot
+on:
+  schedule:
+    - cron: '0 */6 * * *' # تشغيل تلقائي كل 6 ساعات للصيانة الدورية ومزامنة البيانات
+  workflow_dispatch:
+
+jobs:
+  run-autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Execute Automated System Check
+        run: |
+          echo "🔄 جاري فحص وتشغيل نظام In Work الأوتوماتيكي..."
+          python scripts/auto_setup.py
+          echo "✨ تمت عملية المراقبة والتشغيل التلقائي بنجاح!"
