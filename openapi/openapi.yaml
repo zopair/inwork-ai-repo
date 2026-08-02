@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: InWork AI Platform API
+  version: v0.1.0-mvp
+  description: Production-Oriented MVP Foundation API with Idempotency, Correlation Tracking, and RBAC Boundaries.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Development Gateway
+paths:
+  /orders:
+    post:
+      summary: Create a new service order
+      description: Allows an authenticated customer to create a service request.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/CreateOrderRequest.yaml'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/ResponseEnvelope.yaml'
+  /orders/{id}/accept:
+    post:
+      summary: Worker accepts an assigned order
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/ResponseEnvelope.yaml'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

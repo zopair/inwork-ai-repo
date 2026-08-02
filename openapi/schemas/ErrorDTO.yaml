@@ -1,0 +1,19 @@
+type: object
+properties:
+  code:
+    type: string
+    enum:
+      - INVALID_STATE_TRANSITION
+      - UNAUTHORIZED
+      - STORAGE_CONFLICT
+      - RATE_LIMIT_EXCEEDED
+      - IDEMPOTENCY_REPLAY
+      - VALIDATION_ERROR
+  message:
+    type: string
+  retryable:
+    type: boolean
+required:
+  - code
+  - message
+  - retryable

@@ -1,0 +1,12 @@
+type: object
+properties:
+  customerId:
+    type: string
+  serviceId:
+    type: string
+  addressText:
+    type: string
+required:
+  - customerId
+  - serviceId
+  - addressText
