@@ -1,0 +1,16 @@
+{
+  "name": "inwork-ai-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "In Work AI Platform - Ismailia Services",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.1.0"
+  }
+}
