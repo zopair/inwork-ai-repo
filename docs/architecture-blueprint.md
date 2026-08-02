@@ -12,3 +12,15 @@
    - **Frontend:** Cloudflare Pages أو Vercel لاستضافة واجهة Next.js مجاناً وسرعة فائقة Global CDN.
    - **Backend & Database:** Supabase (قاعدة بيانات PostgreSQL مجانية مع المصادقة وحماية البيانات).
    - **Automation:** GitHub Actions + Google Colab للأتمتة وإدارة المستودع سيادياً.
+
+
+# InWork AI Platform - Architecture Blueprint
+
+## Storage Conflict Recovery
+The storage engine uses optimistic concurrency control.
+When concurrent writes produce a conflict:
+
+1. Detect conflict (409)
+2. Retry with exponential backoff and jitter
+3. Abort after maximum retry attempts
+4. Surface a controlled domain/storage error
