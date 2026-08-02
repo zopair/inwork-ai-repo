@@ -1,0 +1,31 @@
+{
+  "currency": "EGP",
+  "country": "Egypt",
+  "region": "Ismailia",
+  "payment_gateways": {
+    "instapay": {
+      "enabled": true,
+      "supported_handle": "@inwork_egypt",
+      "description": "تحويل لحظي مباشر بالجنيه المصري"
+    },
+    "mobile_wallets": {
+      "enabled": true,
+      "providers": ["Vodafone Cash", "Etisalat Cash", "Orange Cash"],
+      "account_type": "Merchant/Personal Secure Vault"
+    }
+  },
+  "mapping_engine": {
+    "provider": "OpenStreetMap",
+    "library": "Leaflet.js",
+    "default_center": {
+      "lat": 30.5965,
+      "lng": 32.2715,
+      "city": "Ismailia"
+    }
+  },
+  "hosting": {
+    "platform": "Cloudflare Pages",
+    "ssl": true,
+    "cost": "0% (Free Tier)"
+  }
+}
