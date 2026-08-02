@@ -1,0 +1,35 @@
+name: Cloudflare Sovereign Engine
+
+on:
+  push:
+    branches: [ main ]
+    # سيعمل هذا المحرك تلقائياً عند أي تعديل على قاعدة البيانات أو الواجهة
+    paths:
+      - 'database/**'
+      - 'src/**'
+      - 'package.json'
+      - 'wrangler.toml'
+
+jobs:
+  deploy-and-execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # تثبيت Wrangler (أداة Cloudflare)
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      # تنفيذ المخطط المعماري (SQL Schema) تلقائياً داخل Cloudflare D1
+      - name: Execute D1 Database Schema
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 execute inwork_db --file=database/schema.sql --remote
