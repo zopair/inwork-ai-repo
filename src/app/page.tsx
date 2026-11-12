@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, Check, ChevronDown, Filter, Heart, Mic, Search, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Filter, Heart, Mic, Search, ShieldCheck, Sparkles, X } from "lucide-react";
 
 type Job = { title:string; company:string; place:string; mode:string; income:string; tags:string[]; level:string; intl?:boolean };
+type CandidateProfile = { name:string; city:string; age:string; contact:string; experience:string; skills:string[]; english:boolean; work:string };
 
 const jobs: Job[] = [
   {title:"مساعد افتراضي", company:"شركة خدمات رقمية", place:"عن بُعد", mode:"Remote", income:"8,000–14,000 جنيه", tags:["تنظيم","Excel","عربي"], level:"مناسبة ليك جدًا"},
@@ -19,7 +20,7 @@ const skills = ["Excel", "Word", "التواصل", "خدمة العملاء", "C
 export default function Home(){
   const [screen,setScreen]=useState(0);
   const [agreed,setAgreed]=useState(false);
-  const [profile,setProfile]=useState({name:"",city:"",age:"",contact:"",experience:"",skills:[] as string[],english:false,work:""});
+  const [profile,setProfile]=useState<CandidateProfile>({name:"",city:"",age:"",contact:"",experience:"",skills:[],english:false,work:""});
   const [filter,setFilter]=useState("الكل");
   const [fav,setFav]=useState<string[]>([]);
   const [selected,setSelected]=useState<Job|null>(null);
@@ -32,7 +33,7 @@ export default function Home(){
   }).filter(j=>profile.english||!j.intl),[filter,query,profile.english]);
 
   const next=()=>setScreen(s=>Math.min(s+1,5));
-  const back=()=>setScreen(s=>Math.max(s-1,0));
+  const basicFields: Array<{key:"name"|"city"|"age"|"contact";label:string}> = [["name","اسمك"],["city","المحافظة"],["age","الفئة العمرية"],["contact","واتساب أو إيميل"]].map(([key,label])=>({key:key as "name"|"city"|"age"|"contact",label}));
 
   return <main dir="rtl" className="min-h-screen bg-[#f7f9fc] text-slate-900">
     <header className="sticky top-0 z-20 border-b bg-white/90 backdrop-blur">
@@ -57,7 +58,7 @@ export default function Home(){
 
     {screen===1 && <Wizard title="قبل ما نبدأ" step="1 من 4"><div className="rounded-3xl border bg-amber-50 p-5 text-sm leading-7 text-amber-950"><div className="mb-2 flex items-center gap-2 font-black"><ShieldCheck/> إخلاء مسؤولية واستخدام مسؤول</div>الفرص والمعلومات المعروضة تجريبية في هذه النسخة وقد تتغير أو لا تكون مناسبة لكل شخص. التقديم النهائي وشروط أي جهة عمل مسؤولية المستخدم. لا نعتمد على أي نتيجة آلية كضمان للتوظيف.</div><label className="mt-5 flex cursor-pointer gap-3 rounded-2xl border bg-white p-4"><input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)} className="mt-1 h-5 w-5"/><span className="font-bold">أوافق على إخلاء المسؤولية وشروط الاستخدام التجريبية.</span></label><button disabled={!agreed} onClick={next} className="mt-6 w-full rounded-2xl bg-indigo-600 py-4 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40">موافق ونكمل</button></Wizard>}
 
-    {screen===2 && <Wizard title="قول لنا الأساسيات" step="2 من 4"><div className="grid gap-4 sm:grid-cols-2">{[["name","اسمك"],["city","المحافظة"],["age","الفئة العمرية"],["contact","واتساب أو إيميل"]].map(([k,l])=><input key={k} value={(profile as any)[k]} onChange={e=>setProfile({...profile,[k]:e.target.value})} placeholder={l} className="rounded-2xl border bg-white px-4 py-4 outline-none focus:border-indigo-500"/> )}</div><button onClick={next} className="mt-6 w-full rounded-2xl bg-indigo-600 py-4 font-bold text-white">نكمل للملف الشخصي</button></Wizard>}
+    {screen===2 && <Wizard title="قول لنا الأساسيات" step="2 من 4"><div className="grid gap-4 sm:grid-cols-2">{basicFields.map(({key,label})=><input key={key} value={profile[key]} onChange={e=>setProfile({...profile,[key]:e.target.value})} placeholder={label} className="rounded-2xl border bg-white px-4 py-4 outline-none focus:border-indigo-500"/>)}</div><button onClick={next} className="mt-6 w-full rounded-2xl bg-indigo-600 py-4 font-bold text-white">نكمل للملف الشخصي</button></Wizard>}
 
     {screen===3 && <Wizard title="خلّينا نفهمك بسرعة" step="3 من 4"><div><p className="mb-3 font-bold">خبرتك أقرب لإيه؟</p><div className="grid gap-3 sm:grid-cols-2">{["لسه ببدأ","أقل من سنة","1–3 سنين","أكتر من 3 سنين"].map(x=><button key={x} onClick={()=>setProfile({...profile,experience:x})} className={`rounded-2xl border p-4 text-right ${profile.experience===x?"border-indigo-600 bg-indigo-50":"bg-white"}`}>{x}</button>)}</div></div><div className="mt-6"><p className="mb-3 font-bold">مهاراتك</p><div className="flex flex-wrap gap-2">{skills.map(x=><button key={x} onClick={()=>setProfile({...profile,skills:profile.skills.includes(x)?profile.skills.filter(s=>s!==x):[...profile.skills,x]})} className={`rounded-full border px-4 py-2 text-sm ${profile.skills.includes(x)?"border-indigo-600 bg-indigo-600 text-white":"bg-white"}`}>{x}</button>)}</div></div><label className="mt-6 flex items-center gap-3 rounded-2xl border bg-white p-4"><input type="checkbox" checked={profile.english} onChange={e=>setProfile({...profile,english:e.target.checked})} className="h-5 w-5"/> بعرف إنجليزي وعايز أشوف فرص دولية</label><button onClick={next} className="mt-6 w-full rounded-2xl bg-indigo-600 py-4 font-bold text-white">ورّيني الفرص</button></Wizard>}
 
