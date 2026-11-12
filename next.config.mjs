@@ -1,8 +1,14 @@
 /** @type {import('next').NextConfig} */
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+
 const nextConfig = {
-  output: 'export', // تحويل المشروع بالكامل إلى HTML/CSS/JS ثابت
+  // GitHub Pages serves this project from a repository subpath.
+  output: "export",
+  ...(isGitHubPages ? { basePath: "/inwork-ai-repo" } : {}),
+  trailingSlash: true,
   images: {
-    unoptimized: true, // مطلوب لـ GitHub Pages
+    unoptimized: true,
   },
 };
+
 export default nextConfig;
