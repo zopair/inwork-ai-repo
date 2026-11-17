@@ -124,7 +124,7 @@ create policy "active service categories are readable"
 drop policy if exists "listed provider profiles are public" on public.provider_profiles;
 create policy "listed provider profiles are public"
   on public.provider_profiles for select to anon, authenticated
-  using (is_listed = true);
+  using (is_listed = true and is_verified = true);
 
 drop policy if exists "providers read their own profile" on public.provider_profiles;
 create policy "providers read their own profile"
@@ -172,7 +172,7 @@ create policy "active services are publicly readable"
     is_active = true
     and exists (
       select 1 from public.provider_profiles p
-      where p.user_id = provider_id and p.is_listed = true
+      where p.user_id = provider_id and p.is_listed = true and p.is_verified = true
     )
   );
 
@@ -209,7 +209,7 @@ create policy "providers read matching open requests"
         and s.is_active = true
         and exists (
           select 1 from public.provider_profiles p
-          where p.user_id = s.provider_id and p.is_listed = true
+          where p.user_id = s.provider_id and p.is_listed = true and p.is_verified = true
         )
     )
   );
@@ -250,6 +250,7 @@ create policy "eligible providers create offers"
       join public.provider_profiles p
         on p.user_id = auth.uid()
        and p.is_listed = true
+       and p.is_verified = true
       where r.id = request_id
         and r.status = 'open'
     )
