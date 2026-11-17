@@ -11,7 +11,7 @@
 
 ## التقنية
 
-- Next.js 14 / React 18 / TypeScript.
+- Next.js 16 / React 19 / TypeScript.
 - Tailwind CSS.
 - Supabase للمصادقة وقاعدة البيانات عند استكمال إعداد بيئة التشغيل.
 - TanStack Query وZustand متاحان لإدارة البيانات والحالة عند الحاجة.
