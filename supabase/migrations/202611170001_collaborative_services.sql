@@ -143,7 +143,22 @@ create policy "providers update their own profile"
   with check (user_id = auth.uid());
 
 -- Verification is controlled by trusted server-side administration, never by the provider.
-revoke update (is_verified) on public.provider_profiles from authenticated;
+create or replace function public.prevent_provider_self_verification()
+returns trigger
+language plpgsql
+as $
+begin
+  if auth.role() = 'authenticated' and new.is_verified is distinct from old.is_verified then
+    raise exception 'Provider verification can only be changed by platform administration';
+  end if;
+  return new;
+end;
+$;
+
+drop trigger if exists provider_verification_guard on public.provider_profiles;
+create trigger provider_verification_guard
+before update on public.provider_profiles
+for each row execute function public.prevent_provider_self_verification();
 
 drop policy if exists "active services are publicly readable" on public.provider_services;
 create policy "active services are publicly readable"
@@ -185,8 +200,12 @@ create policy "providers read matching open requests"
     and exists (
       select 1 from public.provider_services s
       where s.provider_id = auth.uid()
-        and s.category_id = category_id
+        and s.category_id = service_requests.category_id
         and s.is_active = true
+        and exists (
+          select 1 from public.provider_profiles p
+          where p.user_id = s.provider_id and p.is_listed = true
+        )
     )
   );
 
