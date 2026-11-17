@@ -221,6 +221,7 @@ export default function Home() {
   function submitRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmittedRequest(request);
+    setSelectedOfferId("");
     setRequestOpen(false);
     setNotice(
       "تم تجهيز طلبك في المعاينة. لن يُرسل إلى مقدمي الخدمة قبل ربط المنصة بالخدمات الخلفية.",
