@@ -148,8 +148,13 @@ returns trigger
 language plpgsql
 as $function$
 begin
-  if auth.role() = 'authenticated' and new.is_verified is distinct from old.is_verified then
-    raise exception 'Provider verification can only be changed by platform administration';
+  if auth.role() = 'authenticated' then
+    if tg_op = 'INSERT' and coalesce(new.is_verified, false) then
+      raise exception 'Provider verification can only be granted by platform administration';
+    end if;
+    if tg_op = 'UPDATE' and new.is_verified is distinct from old.is_verified then
+      raise exception 'Provider verification can only be changed by platform administration';
+    end if;
   end if;
   return new;
 end;
@@ -157,7 +162,7 @@ $function$;
 
 drop trigger if exists provider_verification_guard on public.provider_profiles;
 create trigger provider_verification_guard
-before update on public.provider_profiles
+before insert or update on public.provider_profiles
 for each row execute function public.prevent_provider_self_verification();
 
 drop policy if exists "active services are publicly readable" on public.provider_services;
@@ -212,7 +217,11 @@ create policy "providers read matching open requests"
 drop policy if exists "customers create their own requests" on public.service_requests;
 create policy "customers create their own requests"
   on public.service_requests for insert to authenticated
-  with check (customer_id = auth.uid());
+  with check (
+    customer_id = auth.uid()
+    and status = 'open'
+    and selected_provider_id is null
+  );
 
 drop policy if exists "request participants read offers" on public.service_offers;
 create policy "request participants read offers"
@@ -230,6 +239,7 @@ create policy "eligible providers create offers"
   on public.service_offers for insert to authenticated
   with check (
     provider_id = auth.uid()
+    and status = 'pending'
     and exists (
       select 1
       from public.service_requests r
@@ -246,9 +256,10 @@ create policy "eligible providers create offers"
   );
 
 drop policy if exists "completed service reviews are public" on public.service_reviews;
-create policy "completed service reviews are public"
-  on public.service_reviews for select to anon, authenticated
-  using (true);
+drop policy if exists "participants read their service reviews" on public.service_reviews;
+create policy "participants read their service reviews"
+  on public.service_reviews for select to authenticated
+  using (customer_id = auth.uid() or provider_id = auth.uid());
 
 drop policy if exists "customers review their completed services" on public.service_reviews;
 create policy "customers review their completed services"
