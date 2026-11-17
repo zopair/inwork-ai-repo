@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InWork AI
 
-## Getting Started
+**InWork** منصة خدمات تشاركية ذكية متعددة المجالات، تجمع طالبي الخدمات بمقدميها وتساعدهم على اكتشاف الخبرات ومقارنة العروض والاتفاق بوضوح.
 
-First, run the development server:
+## هوية المنتج
+
+- منتج خدمات تشاركية، وليس تطبيق نقل.
+- يدعم تعدد مجالات الخدمات وقابلية إضافة فئات جديدة.
+- يستفيد من أنماط UX العامة لطلب الخدمة واستقبال العروض والمقارنة والاختيار، دون نسخ هوية أو أصول أي منصة أخرى.
+- الواجهة عربية RTL افتراضيًا، مع قابلية دعم الإنجليزية LTR.
+
+## التقنية
+
+- Next.js 14 / React 18 / TypeScript.
+- Tailwind CSS.
+- Supabase للمصادقة وقاعدة البيانات عند استكمال إعداد بيئة التشغيل.
+- TanStack Query وZustand متاحان لإدارة البيانات والحالة عند الحاجة.
+
+## التطوير المحلي
 
 ```bash
+npm ci --legacy-peer-deps
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## الفحوصات
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm test
+npm run lint
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## حالة التطوير
 
-## Learn More
+واجهة استكشاف الخدمات الحالية نموذج تفاعلي للعرض وتجربة تدفقات الاستخدام. لا تعتبر نماذج الطلب أو الانضمام الحالية عمليات إنتاجية قبل ربط المصادقة وقاعدة البيانات وسياسات الوصول والإشعارات والتحقق من مقدمي الخدمة.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+راجع:
+- `docs/brand-and-design-system.md`
+- `docs/ux-user-journey.md`
+- `docs/architecture-blueprint.md`
