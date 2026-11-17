@@ -31,6 +31,8 @@ type Category = {
 };
 
 type Provider = ProviderSearchRecord & {
+  description: string;
+  tags: string[];
   area: string;
   rating: number;
   reviews: number;
