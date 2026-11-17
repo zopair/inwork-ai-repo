@@ -146,14 +146,14 @@ create policy "providers update their own profile"
 create or replace function public.prevent_provider_self_verification()
 returns trigger
 language plpgsql
-as $
+as $function$
 begin
   if auth.role() = 'authenticated' and new.is_verified is distinct from old.is_verified then
     raise exception 'Provider verification can only be changed by platform administration';
   end if;
   return new;
 end;
-$;
+$function$;
 
 drop trigger if exists provider_verification_guard on public.provider_profiles;
 create trigger provider_verification_guard
