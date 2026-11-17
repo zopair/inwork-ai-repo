@@ -50,4 +50,4 @@ jobs:
         run: npm ci --legacy-peer-deps --no-audit --no-fund
 
       - name: Audit production dependency tree
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --audit-level=high
