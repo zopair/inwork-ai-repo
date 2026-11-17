@@ -1,0 +1,57 @@
+name: Dependency Lock Sync and Verification
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-verify:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22.x"
+
+      - name: Resolve patched dependency tree and refresh lockfile
+        run: |
+          npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund
+          npm audit fix --package-lock-only --legacy-peer-deps --no-fund
+
+      - name: Commit refreshed lockfile when needed
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if ! git diff --quiet -- package-lock.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore: refresh patched dependency lockfile"
+            git push origin "HEAD:${BRANCH_NAME}"
+          fi
+
+      - name: Install exact locked dependencies
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Build production export
+        run: npm run build
+
+      - name: Audit complete dependency tree
+        run: npm audit --audit-level=high
