@@ -181,6 +181,7 @@ export default function Home() {
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
   const [request, setRequest] = useState<ServiceRequest>(initialRequest);
   const [submittedRequest, setSubmittedRequest] = useState<ServiceRequest | null>(null);
+  const [selectedOfferId, setSelectedOfferId] = useState<string>("");
   const [notice, setNotice] = useState("");
   const [providerName, setProviderName] = useState("");
   const [providerSkill, setProviderSkill] = useState("");
@@ -193,6 +194,13 @@ export default function Home() {
         categoryId: activeCategory,
       }) as Provider[],
     [query, activeCategory],
+  );
+
+  const previewOffers = useMemo(
+    () => submittedRequest
+      ? (filterProviders(providers, { categoryId: submittedRequest.categoryId }) as Provider[]).slice(0, 3)
+      : [],
+    [submittedRequest],
   );
 
   function openRequest(provider?: Provider) {
@@ -359,6 +367,54 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {submittedRequest && (
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+          <div className="rounded-3xl border border-amber-200 bg-amber-50/70 p-5 sm:p-7">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <div className="text-sm font-black text-amber-700">طلبك جاهز للمقارنة</div>
+                <h2 className="mt-1 text-2xl font-black">{submittedRequest.title}</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{submittedRequest.description}</p>
+                <div className="mt-2 text-xs text-slate-500">
+                  {submittedRequest.area || "لم يتم تحديد موقع"}{submittedRequest.budget ? " · الميزانية الاسترشادية: " + submittedRequest.budget : ""}
+                </div>
+              </div>
+              <span className="w-fit rounded-full bg-white px-3 py-1.5 text-xs font-black text-amber-800 ring-1 ring-amber-200">معاينة عروض توضيحية</span>
+            </div>
+            {previewOffers.length > 0 ? (
+              <div className="mt-6 grid gap-3 md:grid-cols-3">
+                {previewOffers.map((provider) => (
+                  <article key={provider.id} className={selectedOfferId === provider.id ? "rounded-2xl border border-[#F59E0B] bg-white p-4 ring-2 ring-amber-200" : "rounded-2xl border border-amber-100 bg-white p-4"}>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-black">{provider.name}</div>
+                      {provider.verified && <BadgeCheck size={16} className="text-sky-600" aria-label="حساب موثّق" />}
+                    </div>
+                    <div className="mt-1 text-xs text-slate-500">{provider.profession}</div>
+                    <div className="mt-4 flex items-center justify-between">
+                      <span className="font-black">{provider.startingPrice}</span>
+                      <span className="inline-flex items-center gap-1 text-xs font-bold"><Star size={13} className="fill-amber-400 text-amber-400" />{provider.rating}</span>
+                    </div>
+                    <div className="mt-2 flex items-center gap-1 text-xs text-slate-500"><Clock3 size={13} />{provider.responseTime}</div>
+                    <button
+                      onClick={() => {
+                        setSelectedOfferId(provider.id);
+                        setNotice("تم اختيار هذا العرض مبدئيًا في المعاينة فقط. لا يوجد اتفاق أو حجز فعلي قبل تفعيل النظام.");
+                      }}
+                      className={selectedOfferId === provider.id ? "mt-4 w-full rounded-xl bg-amber-100 py-2.5 text-sm font-black text-amber-900" : "mt-4 w-full rounded-xl bg-[#0F172A] py-2.5 text-sm font-black text-white transition hover:bg-slate-800"}
+                    >
+                      {selectedOfferId === provider.id ? "تم التحديد مبدئيًا" : "اختر هذا العرض"}
+                    </button>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-5 rounded-2xl bg-white p-4 text-sm text-slate-500">لا توجد نماذج عروض لهذا المجال في المعاينة الحالية.</p>
+            )}
+            <p className="mt-4 text-xs leading-6 text-slate-500">العروض المعروضة بيانات توضيحية ثابتة لشرح المقارنة، وليست عروضًا واردة من مقدمي خدمة فعليين. إرسال الطلب واستقبال عروض حقيقية يتطلبان تفعيل الخادم والحسابات.</p>
+          </div>
+        </section>
+      )}
 
       <section id="services" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
