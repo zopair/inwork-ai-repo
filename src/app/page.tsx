@@ -473,7 +473,7 @@ export default function Home() {
         <div className="mt-12 flex items-center justify-between gap-3">
           <div>
             <h3 className="text-2xl font-black">مقدمو خدمات مقترحون</h3>
-            <p className="mt-1 text-sm text-slate-500">اكتشف الملفات وقارن الخبرات والتقييمات قبل إرسال طلبك.</p>
+            <p className="mt-1 text-sm text-slate-500">اكتشف الملفات وقارن الخبرات قبل إرسال طلبك. الأسماء والتقييمات والأسعار هنا أمثلة توضيحية وليست بيانات فعلية.</p>
           </div>
           <span className="hidden rounded-full bg-white px-4 py-2 text-xs font-bold text-slate-500 ring-1 ring-slate-200 sm:inline-flex">{visibleProviders.length} نتائج</span>
         </div>
