@@ -1,31 +1,38 @@
 {
   "currency": "EGP",
-  "country": "Egypt",
-  "region": "Ismailia",
+  "market": {
+    "country": "Egypt",
+    "coverage_mode": "configurable",
+    "default_region": null,
+    "remote_services_supported": true
+  },
   "payment_gateways": {
+    "status": "not_integrated",
     "instapay": {
-      "enabled": true,
-      "supported_handle": "@inwork_egypt",
-      "description": "تحويل لحظي مباشر بالجنيه المصري"
+      "enabled": false,
+      "account_handle": null,
+      "notes": "Enable only after merchant details, ownership, reconciliation, and server-side verification are confirmed."
     },
     "mobile_wallets": {
-      "enabled": true,
-      "providers": ["Vodafone Cash", "Etisalat Cash", "Orange Cash"],
-      "account_type": "Merchant/Personal Secure Vault"
+      "enabled": false,
+      "providers": [
+        "Vodafone Cash",
+        "Etisalat Cash",
+        "Orange Cash"
+      ],
+      "notes": "Provider and merchant settlement details require explicit operational verification."
     }
   },
   "mapping_engine": {
+    "enabled": false,
     "provider": "OpenStreetMap",
     "library": "Leaflet.js",
-    "default_center": {
-      "lat": 30.5965,
-      "lng": 32.2715,
-      "city": "Ismailia"
-    }
+    "default_center": null,
+    "notes": "Location is optional and service-specific; do not require maps for remote services."
   },
   "hosting": {
-    "platform": "Cloudflare Pages",
-    "ssl": true,
-    "cost": "0% (Free Tier)"
+    "target": "GitHub Pages static export or an approved Next.js host",
+    "ssl_required": true,
+    "pricing": "Verify current provider limits and terms before production deployment."
   }
 }
