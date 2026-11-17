@@ -60,6 +60,7 @@ const categories: Category[] = [
   { id: "education", label: "التعليم والتدريب", description: "تعلم ومهارات واستشارات", icon: "▤" },
   { id: "business", label: "الأعمال والمشروعات", description: "دعم وتشغيل وتطوير", icon: "▦" },
   { id: "events", label: "المناسبات والفعاليات", description: "تنظيم وتجهيز", icon: "✧" },
+  { id: "personal", label: "الخدمات الشخصية", description: "خدمات فردية متنوعة", icon: "◇" },
 ];
 
 const providers: Provider[] = [
@@ -164,6 +165,23 @@ const providers: Provider[] = [
     verified: false,
     available: true,
     initials: "مس",
+  },
+  {
+    id: "p-07",
+    name: "ليلى جمال",
+    profession: "منسقة خدمات شخصية",
+    categoryId: "personal",
+    description: "تنسيق خدمات العناية والمظهر وفق احتياج العميل وموعده ونطاق الخدمة.",
+    tags: ["تنسيق", "عناية", "خدمات شخصية"],
+    area: "الإسماعيلية",
+    rating: 4.8,
+    reviews: 42,
+    completed: 67,
+    startingPrice: "حسب تفاصيل الخدمة",
+    responseTime: "ترد خلال ساعة",
+    verified: true,
+    available: true,
+    initials: "لج",
   },
 ];
 
